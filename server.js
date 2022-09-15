@@ -6,24 +6,30 @@ const hostname = '127.0.0.1';
 const port = 3000;
 
 let db;
-let connectionString = `mongodb://localhost:27017/namesDatabase`
+const uri = "mongodb+srv://<user>:<password>@<cluster-url>?retryWrites=true&w=majority";
 
-mongodb.connect(
-    connectionString,
-    { useNewUrlParser: true, useUnifiedTopology: true },
-    function (err, client) {
-      db = client.db()
+const client = new mongodb(uri);
+
+  async function run() {
+    try {
+      const database = client.db('test');
+      const names = database.collection('names');
+      const nameObject = { name: 'Christian' };
+      
+      names.insertOne(nameObject, function (err, info) {
+        console.log("Inserted");
+    })
+
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
     }
-  )
+  }
+  
+
 
 const server = http.createServer((req, res) => {
-    const nameObject = { name: 'Christian' };
-    db.collection('namesCollection').insertOne(nameObject, function (err, info) {
-        //executes after the insertion.
-        res.statusCode = 201;
-        res.setHeader('Content-Type', 'text/plain');
-        res.end('Name created');
-    })
+    run().catch(console.dir);
 });
 
 server.listen(port, hostname, () => {
