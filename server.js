@@ -5,6 +5,7 @@ const mongodb = require('mongodb').MongoClient
 const hostname = '127.0.0.1';
 const port = 3000;
 
+// This example code is based on: https://www.mongodb.com/docs/drivers/node/current/quick-start/
 let db;
 const uri = "mongodb+srv://<user>:<password>@<cluster-url>?retryWrites=true&w=majority";
 
